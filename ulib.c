@@ -3,6 +3,15 @@
 #include "fcntl.h"
 #include "user.h"
 #include "x86.h"
+#include "spinlock.h"
+
+void
+init_lock(struct spinlock * lk) { lk->locked = 0;
+}
+void lock(struct spinlock * lk) { while(xchg(&lk->locked, 1) != 0)
+; }
+void unlock(struct spinlock * lk) { xchg(&lk->locked, 0);
+}
 
 char*
 strcpy(char *s, const char *t)
